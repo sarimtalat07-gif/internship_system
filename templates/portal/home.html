@@ -1,0 +1,34 @@
+{% extends 'portal/base.html' %}
+
+{% block content %}
+<h1 class="mb-4">Student Internship & Career Management System</h1>
+
+<div class="row text-center">
+    <div class="col-md-3">
+        <div class="card p-3">
+            <h2>{{ total_students }}</h2>
+            <p class="text-muted">Registered Students</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card p-3">
+            <h2>{{ total_companies }}</h2>
+            <p class="text-muted">Partner Companies</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card p-3">
+            <h2>{{ open_internships }}</h2>
+            <p class="text-muted">Open Internships</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card p-3">
+            <h2>{{ total_applications }}</h2>
+            <p class="text-muted">Total Applications</p>
+        </div>
+    </div>
+</div>
+
+<a class="btn btn-primary mt-4" href="{% url 'internship_list' %}">Browse Internships</a>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'portal/base.html' %}
+
+{% block content %}
+<h1 class="mb-4">Open Internships</h1>
+
+{% if internships %}
+    {% for internship in internships %}
+    <div class="card mb-3">
+        <div class="card-body">
+            <h4 class="card-title">{{ internship.title }}</h4>
+            <h6 class="card-subtitle mb-2 text-muted">{{ internship.company.name }} - {{ internship.location }}</h6>
+            <p class="card-text">{{ internship.description|truncatewords:25 }}</p>
+            <p><strong>Deadline:</strong> {{ internship.deadline }}
+               | <strong>Stipend:</strong> {{ internship.stipend }}</p>
+            <a class="btn btn-outline-primary btn-sm" href="{% url 'internship_detail' internship.id %}">Details</a>
+            <a class="btn btn-primary btn-sm" href="{% url 'apply' internship.id %}">Apply Now</a>
+        </div>
+    </div>
+    {% endfor %}
+{% else %}
+    <div class="alert alert-info">No open internships right now.</div>
+{% endif %}
+{% endblock %}

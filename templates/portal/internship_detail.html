@@ -1,0 +1,22 @@
+{% extends 'portal/base.html' %}
+
+{% block content %}
+<h1>{{ internship.title }}</h1>
+<h5 class="text-muted">{{ internship.company.name }} | {{ internship.location }}</h5>
+<hr>
+<p>{{ internship.description }}</p>
+<p><strong>Stipend:</strong> {{ internship.stipend }}</p>
+<p><strong>Deadline:</strong> {{ internship.deadline }}</p>
+
+<h5>Required Skills</h5>
+<ul>
+    {% for s in internship.internshipskill_set.all %}
+        <li>{{ s.skill.name }}</li>
+    {% empty %}
+        <li>No specific skills listed</li>
+    {% endfor %}
+</ul>
+
+<a class="btn btn-primary" href="{% url 'apply' internship.id %}">Apply Now</a>
+<a class="btn btn-secondary" href="{% url 'internship_list' %}">Back</a>
+{% endblock %}

@@ -1,0 +1,10 @@
+{% extends 'portal/base.html' %}
+
+{% block content %}
+<div class="alert alert-success">
+    <h4>Application Submitted!</h4>
+    <p>{{ application.student.name }} applied for <strong>{{ application.internship.title }}</strong>.</p>
+    <p>Track its status from the admin panel.</p>
+</div>
+<a class="btn btn-primary" href="{% url 'internship_list' %}">Back to Internships</a>
+{% endblock %}
