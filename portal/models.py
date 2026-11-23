@@ -5,6 +5,8 @@ Learning note: each class below = one table in Oracle. Each variable inside
 a class = one column. 'ForeignKey' = a link to another table (like the
 lines in an ERD diagram).
 """
+from django.core.exceptions import ValidationError
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
 
@@ -21,7 +23,7 @@ class Department(models.Model):
 
 class Program(models.Model):
     name = models.CharField(max_length=100)
-    department = models.ForeignKey(Department, on_delete=models.CASCADE)
+    department = models.ForeignKey(Department, on_delete=models.PROTECT)
     duration_years = models.IntegerField(default=4)
 
     class Meta:
@@ -34,9 +36,11 @@ class Program(models.Model):
 class Student(models.Model):
     name = models.CharField(max_length=100)
     roll_no = models.CharField(max_length=20, unique=True)
-    email = models.EmailField()
-    cgpa = models.DecimalField(max_digits=3, decimal_places=2)  # e.g. 3.45
-    program = models.ForeignKey(Program, on_delete=models.CASCADE)
+    email = models.EmailField(unique=True)
+    cgpa = models.DecimalField(
+        max_digits=3, decimal_places=2,  # e.g. 3.45
+        validators=[MinValueValidator(0), MaxValueValidator(4)])
+    program = models.ForeignKey(Program, on_delete=models.PROTECT)
 
     class Meta:
         db_table = 'student'
@@ -185,6 +189,7 @@ class ApplicationStatusHistory(models.Model):
 
     class Meta:
         db_table = 'application_status_history'
+        ordering = ['changed_at', 'id']
 
     def __str__(self):
         return str(self.application) + ' -> ' + str(self.status)
@@ -219,7 +224,7 @@ class Offer(models.Model):
         ('Accepted', 'Accepted'),
         ('Declined', 'Declined'),
     ]
-    application = models.ForeignKey(Application, on_delete=models.CASCADE)
+    application = models.OneToOneField(Application, on_delete=models.CASCADE)  # one offer per application
     stipend = models.DecimalField(max_digits=10, decimal_places=2)
     offer_date = models.DateField(auto_now_add=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='Pending')
@@ -243,6 +248,10 @@ class Placement(models.Model):
 
     class Meta:
         db_table = 'placement'
+
+    def clean(self):
+        if self.end_date and self.start_date and self.end_date < self.start_date:
+            raise ValidationError('End date cannot be before start date.')
 
     def __str__(self):
         return 'Placement from ' + str(self.offer)

@@ -1,5 +1,9 @@
 from django import forms
+from django.core.validators import FileExtensionValidator
+
 from .models import Student
+
+MAX_RESUME_MB = 5
 
 
 class ApplicationForm(forms.Form):
@@ -10,10 +14,17 @@ class ApplicationForm(forms.Form):
     )
     resume_file = forms.FileField(
         required=False,
-        label='Upload your resume (optional if you already uploaded one)',
+        validators=[FileExtensionValidator(['pdf'])],
+        label='Upload your resume as PDF (optional - your latest saved resume is used if you skip this)',
     )
     cover_letter = forms.CharField(
         widget=forms.Textarea(attrs={'rows': 4}),
         required=False,
         label='Short cover letter (optional)',
     )
+
+    def clean_resume_file(self):
+        f = self.cleaned_data.get('resume_file')
+        if f and f.size > MAX_RESUME_MB * 1024 * 1024:
+            raise forms.ValidationError(f'Resume must be under {MAX_RESUME_MB} MB.')
+        return f
