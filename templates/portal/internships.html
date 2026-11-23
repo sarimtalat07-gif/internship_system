@@ -11,7 +11,7 @@
             <h6 class="card-subtitle mb-2 text-muted">{{ internship.company.name }} - {{ internship.location }}</h6>
             <p class="card-text">{{ internship.description|truncatewords:25 }}</p>
             <p><strong>Deadline:</strong> {{ internship.deadline }}
-               | <strong>Stipend:</strong> {{ internship.stipend }}</p>
+               | <strong>Stipend:</strong> {{ internship.stipend|default:"Not disclosed" }}</p>
             <a class="btn btn-outline-primary btn-sm" href="{% url 'internship_detail' internship.id %}">Details</a>
             <a class="btn btn-primary btn-sm" href="{% url 'apply' internship.id %}">Apply Now</a>
         </div>

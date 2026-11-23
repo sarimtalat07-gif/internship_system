@@ -1,6 +1,10 @@
 venv/
+.venv/
 media/
 __pycache__/
 *.pyc
 .ipynb_checkpoints/
 build/
+.env
+.vscode/
+db.sqlite3
